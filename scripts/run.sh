@@ -1,0 +1,1 @@
+./build.sh && ./run_app.sh

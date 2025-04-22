@@ -1,0 +1,16 @@
+# Dockerfile для thirdparty (збірка wxWidgets та GLEW)
+FROM wxopenglpng-base
+
+# Копіюємо проект в контейнер
+WORKDIR /wxopenglpng
+
+# Створюємо директорію для зборки
+RUN mkdir -p build && cd build
+
+# Запускаємо CMake для налаштування та компіляції бібліотек
+RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build build --target wxWidgets_external --parallel $(nproc) && \
+    cmake --build build --target GLEW_external --parallel $(nproc)
+
+# Завершуємо збірку
+CMD ["bash"]

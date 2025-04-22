@@ -1,0 +1,29 @@
+# Dockerfile
+
+FROM ubuntu:24.04
+
+# Встановлення необхідного
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    libgl1-mesa-dev \
+    libgl-dev \
+    libglu1-mesa-dev \
+    libpng-dev \
+    libgtk-3-dev \
+    x11-apps \
+    wget \
+    unzip \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV STAGED_INSTALL_PREFIX=/usr/local/stage
+ENV CMAKE_PREFIX_PATH=$STAGED_INSTALL_PREFIX
+
+WORKDIR /wxopenglpng
+COPY . .
+
+# Залишаємо точку входу для ручної роботи
+CMD ["/bin/bash"]
