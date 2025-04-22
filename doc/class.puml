@@ -1,0 +1,101 @@
+@startuml
+!define RECTANGLE class
+
+RECTANGLE Application {
+  +OnInit(): bool
+}
+
+RECTANGLE ApplicationFrame {
+  +ApplicationFrame(title: wxString): void
+  -openGLCanvas: OpenGLCanvas
+}
+
+RECTANGLE SceneItem {
+  +SceneItem(canvas: OpenGLCanvas): void
+  +Render(): void
+  -canvas: OpenGLCanvas
+}
+
+RECTANGLE Triangle {
+  +Triangle(canvas: OpenGLCanvas): void
+  +Render(): void
+}
+
+RECTANGLE Circle {
+  +Circle(canvas: OpenGLCanvas): void
+  +Render(): void
+}
+
+RECTANGLE Square {
+  +Square(canvas: OpenGLCanvas): void
+  +Render(): void
+}
+
+RECTANGLE Button {
+  +Button(canvas: OpenGLCanvas, x: float, y: float, width: float, height: float, onClick: std::function<void()>): void
+  +Initialize(): void
+  +Render(): void
+  +LoadButtonTexture(filename: wxString): bool
+  +CheckClick(mouseX: float, mouseY: float): void
+  -x: float
+  -y: float
+  -width: float
+  -height: float
+  -onClick: std::function<void()>
+  -textureLoaded: bool
+  -buttonTexture: GLuint
+}
+
+RECTANGLE OpenGLCanvas {
+  +OpenGLCanvas(parent: ApplicationFrame, canvasAttrs: wxGLAttributes): void
+  ~OpenGLCanvas(): void
+  +OnPaint(event: wxPaintEvent): void
+  +OnSize(event: wxSizeEvent): void
+  +OnMouseClick(event: wxMouseEvent): void
+  +RenderScene(): void
+  +ToggleControlPanel(): void
+  +GetControlPanel(): wxPanel*
+  +model(): Model*
+  -openGLContext: std::unique_ptr<wxGLContext>
+  -isOpenGLInitialized: bool
+  -isControlPanelVisible: bool
+  -controlPanel: wxPanel*
+  -rotationSlider: wxSlider*
+  -zoomSlider: wxSlider*
+  -toggleCheckbox: wxCheckBox*
+  -m_model: Model
+  -sceneItems: std::vector<std::unique_ptr<SceneItem>>
+  -toggleButton: std::unique_ptr<Button>
+}
+
+RECTANGLE Model {
+  +setZoomLevel(zoomLevel: float): void
+  +setSize(width: int, height: int): void
+  +getRotationAngle(): float
+  +setRotationAngle(rotationAngle: float): void
+  +getZoomLevel(): float
+  +getShowTriangle(): bool
+  +setShowTriangle(showTriangle: bool): void
+  +getWidth(): int
+  +getHeight(): int
+  +getCx(): float
+  +getCy(): float
+  -recalculateCenter(): void
+  -rotationAngle: float
+  -zoomLevel: float
+  -showTriangle: bool
+  -width: int
+  -height: int
+  -cx: float
+  -cy: float
+}
+
+Application --> ApplicationFrame : Creates
+ApplicationFrame --> OpenGLCanvas : Contains
+OpenGLCanvas --> SceneItem : Contains
+SceneItem <|-- Triangle
+SceneItem <|-- Circle
+SceneItem <|-- Square
+SceneItem <|-- Button
+OpenGLCanvas --> Model : Uses
+@enduml
